@@ -17,7 +17,7 @@ import (
 
 var traceJaegerCmd = &cobra.Command{
 	Use:   "jaeger",
-	Short: "A brief description of your command",
+	Short: "Send some traces using Jaeger transport",
 
 	Run: func(cmd *cobra.Command, args []string) {
 
