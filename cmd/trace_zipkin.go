@@ -7,9 +7,9 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/openzipkin/zipkin-go"
+	zipkinhttp "github.com/openzipkin/zipkin-go/middleware/http"
 	"github.com/openzipkin/zipkin-go/model"
 	reporterhttp "github.com/openzipkin/zipkin-go/reporter/http"
-	zipkinhttp "github.com/openzipkin/zipkin-go/middleware/http"	
 )
 
 var traceZipkinCmd = &cobra.Command{
@@ -27,17 +27,17 @@ var traceZipkinCmd = &cobra.Command{
 
 		// Local endpoint represent the local service information
 		localEndpoint := &model.Endpoint{ServiceName: serviceName}
-	 
+
 		// Sampler tells you which traces are going to be sampled or not. In this case we will record 100% (1.00) of traces.
 		sampler, err := zipkin.NewCountingSampler(1)
 		if err != nil {
 			fmt.Println(err)
 		}
-	 
+
 		tracer, err := zipkin.NewTracer(
-		   reporter,
-		   zipkin.WithSampler(sampler),
-		   zipkin.WithLocalEndpoint(localEndpoint),
+			reporter,
+			zipkin.WithSampler(sampler),
+			zipkin.WithLocalEndpoint(localEndpoint),
 		)
 		if err != nil {
 			fmt.Println(err)
@@ -46,8 +46,10 @@ var traceZipkinCmd = &cobra.Command{
 		span := tracer.StartSpan("hello")
 		fmt.Println("hello")
 		span.Finish()
-		
-		if requestURL == "" { return }
+
+		if requestURL == "" {
+			return
+		}
 
 		client, _ := zipkinhttp.NewClient(tracer, zipkinhttp.ClientTrace(true))
 		req, _ := http.NewRequest("GET", requestURL, nil)
@@ -61,5 +63,5 @@ func init() {
 
 	traceZipkinCmd.Flags().StringP("name", "n", "tracer-cli", "Service Name")
 	traceZipkinCmd.Flags().StringP("http-collector-url", "c", "http://localhost:9411/api/v2/spans", "The URL for communicating thrift or JSON via HTTP")
-	traceZipkinCmd.Flags().StringP("http-request-url", "r", "", "Make HTTP GET to this URL")	
+	traceZipkinCmd.Flags().StringP("http-request-url", "r", "", "Make HTTP GET to this URL")
 }

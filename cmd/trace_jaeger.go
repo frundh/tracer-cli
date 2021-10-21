@@ -27,13 +27,13 @@ var traceJaegerCmd = &cobra.Command{
 
 		requestURL, _ := cmd.Flags().GetString("http-request-url")
 
-		cfg := jaegercfg.Configuration {
+		cfg := jaegercfg.Configuration{
 			ServiceName: serviceName,
-			Sampler: &jaegercfg.SamplerConfig {
-				Type: jaeger.SamplerTypeConst,
+			Sampler: &jaegercfg.SamplerConfig{
+				Type:  jaeger.SamplerTypeConst,
 				Param: 1,
 			},
-			Reporter: &jaegercfg.ReporterConfig {
+			Reporter: &jaegercfg.ReporterConfig{
 				LogSpans: true,
 			},
 		}
@@ -45,7 +45,7 @@ var traceJaegerCmd = &cobra.Command{
 		}
 
 		jLogger := jaegerlog.StdLogger
-    	jMetricsFactory := metrics.NullFactory
+		jMetricsFactory := metrics.NullFactory
 
 		tracer, closer, _ := cfg.NewTracer(
 			jaegercfg.Logger(jLogger),
@@ -54,25 +54,26 @@ var traceJaegerCmd = &cobra.Command{
 
 		opentracing.SetGlobalTracer(tracer)
 		defer closer.Close()
-		
+
 		//tracer := opentracing.GlobalTracer()
 
 		span := tracer.StartSpan("hello")
 		fmt.Println("hello")
 		span.Finish()
 
-
 		parentSpan := tracer.StartSpan("parent")
 		defer parentSpan.Finish()
 
 		childSpan := tracer.StartSpan(
-    		"child",
-    		opentracing.ChildOf(parentSpan.Context()),
+			"child",
+			opentracing.ChildOf(parentSpan.Context()),
 		)
 		defer childSpan.Finish()
 
-		if requestURL == "" { return }
-		
+		if requestURL == "" {
+			return
+		}
+
 		clientSpan := tracer.StartSpan("http-client")
 		defer clientSpan.Finish()
 
