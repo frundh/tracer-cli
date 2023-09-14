@@ -1,4 +1,4 @@
-FROM golang:1.13 AS build
+FROM golang:1.19 AS build
 ENV GOPATH=/go
 COPY . /src/
 WORKDIR /src/
