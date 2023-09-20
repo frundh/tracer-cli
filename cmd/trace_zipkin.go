@@ -44,7 +44,6 @@ var traceZipkinCmd = &cobra.Command{
 		}
 
 		span := tracer.StartSpan("hello")
-		fmt.Println("hello")
 		span.Finish()
 
 		if requestURL == "" {
@@ -55,6 +54,8 @@ var traceZipkinCmd = &cobra.Command{
 		req, _ := http.NewRequest("GET", requestURL, nil)
 		res, _ := client.DoWithAppSpan(req, "http-client")
 		res.Body.Close()
+
+		fmt.Println("Done!")
 	},
 }
 

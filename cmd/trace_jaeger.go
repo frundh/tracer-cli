@@ -87,6 +87,8 @@ var traceJaegerCmd = &cobra.Command{
 		tracer.Inject(clientSpan.Context(), opentracing.HTTPHeaders, opentracing.HTTPHeadersCarrier(req.Header))
 		resp, _ := http.DefaultClient.Do(req)
 		fmt.Println(resp.Status)
+
+		fmt.Println("Done!")
 	},
 }
 
