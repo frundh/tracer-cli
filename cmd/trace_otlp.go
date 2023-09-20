@@ -75,7 +75,8 @@ var traceOtlpCmd = &cobra.Command{
 
 		// if requestURL is not empty, make a request to it
 		if requestUrl != "" {
-			_, _ = otelhttp.Get(ctx, requestUrl)
+			resp, _ := otelhttp.Get(ctx, requestUrl)
+			defer resp.Body.Close()
 		}
 
 		fmt.Println("Done!")
@@ -87,6 +88,6 @@ func init() {
 
 	traceOtlpCmd.Flags().StringP("name", "n", "tracer-cli", "Service Name")
 	traceOtlpCmd.Flags().StringP("otlp-grpc-url", "u", "http://localhost:4317", "The URL for communicating otlp via gRPC")
-	traceOtlpCmd.Flags().StringP("otlp-http-url", "c", "http://localhost:4318", "The URL for communicating otlp via HTTP")
+	//traceOtlpCmd.Flags().StringP("otlp-http-url", "c", "http://localhost:4318", "The URL for communicating otlp via HTTP")
 	traceOtlpCmd.Flags().StringP("http-request-url", "r", "", "Make HTTP GET to this URL")
 }

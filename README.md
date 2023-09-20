@@ -1,5 +1,5 @@
 # Tracer CLI
-Simple tool for sending sample traces to Jaeger or Zipkin
+Simple tool for sending sample traces to a Jaeger, Zipkin or OTLP backend.
 
 ## Run
 ```bash
